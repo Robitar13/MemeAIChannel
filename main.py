@@ -24,12 +24,12 @@ def send_meme(text, image_url):
     }
     response = requests.post(url, data=data)
     print("✅ Ответ Telegram:", response.status_code)
-
+    
 def main():
-    print("🤖 Генерируем шутку...")
-    meme_text = generate_meme_text()
-    print("🎨 Генерируем картинку...")
-    meme_image = generate_image(meme_text)
+    print("🤖 Генерируем мем...")
+    meme_text, image_prompt = generate_meme_text()
+    print("🎨 Генерируем картинку по сцене:", image_prompt)
+    meme_image = generate_image(image_prompt)
     send_meme(meme_text, meme_image)
 
 if __name__ == "__main__":
