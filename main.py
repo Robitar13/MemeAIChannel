@@ -3,7 +3,8 @@ import requests
 import random
 from dotenv import load_dotenv
 from utils.meme_prompts import generate_meme_text
-from utils.image_gen import generate_image_url
+from utils.image_gen import generate_image
+import requests
 
 load_dotenv()
 
@@ -13,19 +14,23 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 UNSPLASH_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
 
 def send_meme(text, image_url):
+    print("🖼 Отправляем мем в Telegram...")
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
     data = {
         "chat_id": CHANNEL_USERNAME,
-        "caption": text,
         "photo": image_url,
+        "caption": text,
         "parse_mode": "HTML"
     }
-    requests.post(url, data=data)
+    response = requests.post(url, data=data)
+    print("✅ Ответ Telegram:", response.status_code)
 
 def main():
+    print("🤖 Генерируем шутку...")
     meme_text = generate_meme_text()
-    image_url = generate_image_url(meme_text)
-    send_meme(meme_text, image_url)
+    print("🎨 Генерируем картинку...")
+    meme_image = generate_image(meme_text)
+    send_meme(meme_text, meme_image)
 
 if __name__ == "__main__":
     main()
