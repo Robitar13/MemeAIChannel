@@ -15,7 +15,7 @@ UNSPLASH_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
 def send_meme(text, image_url):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
     data = {
-        "chat_id": CHANNEL,
+        "chat_id": CHANNEL_USERNAME,
         "caption": text,
         "photo": image_url,
         "parse_mode": "HTML"
