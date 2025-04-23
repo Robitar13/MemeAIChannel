@@ -1,10 +1,23 @@
 import requests
 import os
 
-def generate_image_url(query="funny ai meme"):
-    url = f"https://api.unsplash.com/search/photos?query={query}&client_id={os.getenv('UNSPLASH_ACCESS_KEY')}"
-    r = requests.get(url)
-    data = r.json()
-    if data.get("results"):
-        return data["results"][0]["urls"]["regular"]
-    return "https://i.imgur.com/Z6hZ6OQ.png"  # запасная картинка
+def generate_image(prompt):
+    headers = {
+        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "model": "openai/dall-e-3",  # или другой подходящий image endpoint
+        "prompt": prompt,
+        "n": 1,
+        "size": "1024x1024"
+    }
+
+    r = requests.post("https://openrouter.ai/api/v1/images/generations", headers=headers, json=data)
+    try:
+        return r.json()["data"][0]["url"]
+    except Exception as e:
+        print("❌ Ошибка генерации картинки:", e)
+        return "https://i.imgur.com/Z6hZ6OQ.png"  # запасная
+
