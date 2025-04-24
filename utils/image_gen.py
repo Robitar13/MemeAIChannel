@@ -8,16 +8,18 @@ def generate_image(prompt):
     }
 
     data = {
-        "model": "openai/dall-e-3",  # или другой подходящий image endpoint
+        "model": "openai/dall-e-3",  # важно!
         "prompt": prompt,
         "n": 1,
         "size": "1024x1024"
     }
 
-    r = requests.post("https://openrouter.ai/api/v1/images/generations", headers=headers, json=data)
+    response = requests.post("https://openrouter.ai/api/v1/images/generations", headers=headers, json=data)
+    result = response.json()
+
     try:
-        return r.json()["data"][0]["url"]
+        return result["data"][0]["url"]
     except Exception as e:
-        print("❌ Ошибка генерации картинки:", e)
-        return "https://i.imgur.com/Z6hZ6OQ.png"  # запасная
+        print("❌ Ошибка генерации изображения:", result)
+        return None  # не подставлять imgur-заглушку
 
