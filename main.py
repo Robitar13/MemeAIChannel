@@ -30,13 +30,12 @@ def main():
     meme_text, image_prompt = generate_meme_text()
     print("🎨 Генерируем картинку по сцене:", image_prompt)
     meme_image = generate_image(image_prompt)
-    send_meme(meme_text, meme_image)
-meme_image = generate_image(image_prompt)
 
-if meme_image:
-    send_meme(meme_text, meme_image)
-else:
-    print("⚠️ Картинка не сгенерирована. Пропускаем пост.")
+    if meme_image:
+        send_meme(meme_text, meme_image)
+        print("✅ Мем опубликован")
+    else:
+        print("⚠️ Картинка не сгенерирована. Пост пропущен.")
 
 if __name__ == "__main__":
     main()
