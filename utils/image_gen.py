@@ -2,24 +2,32 @@ import requests
 import os
 
 def generate_image(prompt):
+    api_key = os.getenv("GENAPI_API_KEY")  # ты должен добавить это в .env или GitHub Secrets
+
+    url = "https://gen-api.ru/model/dalle-3/api"
     headers = {
-        "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
-        "Content-Type": "application/json"
+        "accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
     }
 
-    data = {
-        "model": "openai/dall-e-3",  # важно!
+    payload = {
         "prompt": prompt,
+        "quality": "standard",  # или "hd"
         "n": 1,
         "size": "1024x1024"
     }
 
-    response = requests.post("https://openrouter.ai/api/v1/images/generations", headers=headers, json=data)
-    result = response.json()
-
     try:
-        return result["data"][0]["url"]
-    except Exception as e:
-        print("❌ Ошибка генерации изображения:", result)
-        return None  # не подставлять imgur-заглушку
+        response = requests.post(url, json=payload, headers=headers)
+        result = response.json()
 
+        if "data" in result and result["data"]:
+            return result["data"][0]["url"]  # картинка найдена
+        else:
+            print("⚠️ Не удалось получить изображение:", result)
+            return None
+
+    except Exception as e:
+        print("❌ Ошибка генерации изображения:", e)
+        return None
